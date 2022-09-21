@@ -5,22 +5,24 @@ import com.example.gravity_project.network.retrofit.ApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
 
-const val BASE_URL = "https://efs5i1ube5.execute-api.eu-central-1.amazonaws.com/"
+private const val BASE_URL = "https://efs5i1ube5.execute-api.eu-central-1.amazonaws.com/"
 
 @Module
-@InstallIn(ActivityComponent::class)
+@InstallIn(SingletonComponent::class)
 object RetrofitModule {
 
     @Provides
     fun providesBaseUrl(): String = BASE_URL
 
     @Provides
+    @Singleton
     fun providesOkHTTPLoggingInterceptor(): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
@@ -29,6 +31,7 @@ object RetrofitModule {
     }
 
     @Provides
+    @Singleton
     fun providesRetrofit(BASE_URL: String, okHttpClient: OkHttpClient): Retrofit =
         Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -37,11 +40,13 @@ object RetrofitModule {
             .build()
 
     @Provides
+    @Singleton
     fun provideApiService(retrofit: Retrofit): ApiService =
         retrofit.create(ApiService::class.java)
 
 
     @Provides
+    @Singleton
     fun apiRepository(apiService: ApiService): ApiRepository =
         ApiRepository(apiService)
 }
