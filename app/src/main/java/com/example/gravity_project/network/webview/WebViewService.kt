@@ -1,6 +1,8 @@
 package com.example.gravity_project.network.webview
 
+import android.annotation.SuppressLint
 import android.os.Build
+import android.util.Log
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -9,11 +11,13 @@ import com.example.gravity_project.localdata.SharedPreferenceService
 
 class WebViewService(private val sharedPreferenceService: SharedPreferenceService) :
     WebViewClient() {
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    @SuppressLint("NewApi")
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-        view?.loadUrl(request?.url.toString())
+        view?.loadUrl(request?.url!!.toString())
+        Log.d("WebService", request?.url!!.toString())
         sharedPreferenceService.writeURLToShared(request?.url.toString())
         return true
     }
+
 
 }
