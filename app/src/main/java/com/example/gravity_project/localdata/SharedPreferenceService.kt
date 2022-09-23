@@ -1,16 +1,19 @@
 package com.example.gravity_project.localdata
 
-import android.content.Context
 import android.content.SharedPreferences
+import com.example.gravity_project.model.ResponseModel
+import com.google.gson.Gson
+import javax.inject.Inject
+import javax.inject.Singleton
 
-private const val SHARE_NAME = "settings"
-private const val HTTP_URL = "httpUrl"
+private const val RESPONSE = "model"
 private const val IS_FIRST_SIGN_IN = "isFirst"
 
-class SharedPreferenceService(context: Context) {
-    private val prefSetting = context.getSharedPreferences(SHARE_NAME, Context.MODE_PRIVATE)
-    private var myShared: SharedPreferences = prefSetting
+@Singleton
+class SharedPreferenceService @Inject constructor(private val sharedPreferences: SharedPreferences) {
+    private var myShared: SharedPreferences = sharedPreferences
     private lateinit var editor: SharedPreferences.Editor
+    private val gso = Gson()
 
     fun writeToShareIsSignIn(value: Boolean) {
         editor = myShared.edit()
@@ -18,19 +21,22 @@ class SharedPreferenceService(context: Context) {
         editor.apply()
     }
 
-    fun writeURLToShared(value: String) {
+    fun writeResponse(value: ResponseModel) {
+        val str = gso.toJsonTree(value)
         editor = myShared.edit()
-        editor.putString(HTTP_URL, value)
+        editor.putString(RESPONSE, str.toString())
         editor.apply()
     }
 
-    fun readFromSharedIsSign(defValue: Boolean): Boolean {
-        myShared = prefSetting
-        return myShared.getBoolean(IS_FIRST_SIGN_IN, defValue)
+    fun readFromSharedIsSign(): Boolean {
+        myShared = sharedPreferences
+        return myShared.getBoolean(IS_FIRST_SIGN_IN, false)
     }
 
-    fun readFromSharedUrl(defValue: String): String {
-        myShared = prefSetting
-        return myShared.getString(HTTP_URL, defValue)!!
+    fun readResponse(): ResponseModel {
+        myShared = sharedPreferences
+        val json = myShared.getString(RESPONSE, "empty")
+        val data = gso.fromJson(json, ResponseModel::class.java)
+        return ResponseModel(data.home, data.link)
     }
 }

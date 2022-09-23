@@ -7,7 +7,6 @@ import android.webkit.WebChromeClient
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import com.example.gravity_project.databinding.FragmentWebViewBinding
-import com.example.gravity_project.localdata.SharedPreferenceService
 import com.example.gravity_project.network.webview.WebViewService
 import com.example.gravity_project.ui.fragment.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,17 +27,21 @@ class WebViewFragment : BaseFragment<FragmentWebViewBinding>(FragmentWebViewBind
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initWebView()
-//        if (savedInstanceState != null) {
-//            binding.myWebView.restoreState(savedInstanceState)
-//        } else binding.myWebView.loadUrl(arguments?.getString("key").toString())
     }
 
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun initWebView() {
         binding.myWebView.settings.javaScriptEnabled = true
-        binding.myWebView.webViewClient = WebViewService(SharedPreferenceService(requireContext()))
-        val url = sharedPreferenceService.readFromSharedUrl("https://www.reddit.com/")
+        binding.myWebView.webViewClient = WebViewService()
+        webChromeClient()
+        binding.myWebView.loadUrl(arguments?.getString("key")!!)
+        binding.myWebView
+        govBack()
+    }
+
+
+    private fun webChromeClient() {
         binding.myWebView.webChromeClient = object : WebChromeClient() {
             override fun onShowCustomView(view: View?, callback: CustomViewCallback?) {
                 super.onShowCustomView(view, callback)
@@ -53,9 +56,6 @@ class WebViewFragment : BaseFragment<FragmentWebViewBinding>(FragmentWebViewBind
                 binding.fullScreensVideo.isVisible = false
             }
         }
-        binding.myWebView.loadUrl(url)
-        binding.myWebView
-        govBack()
     }
 
     private fun govBack() {
