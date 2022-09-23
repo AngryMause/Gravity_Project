@@ -25,10 +25,11 @@ class LoadingScreenViewModel @Inject constructor(
         }
     }
 
-
     private suspend fun getResponse(): ResponseModel {
         val data = apiRepository.getResponse().body()
-        return ResponseModel(home = data!!.home, link = data!!.link)
+        return data.let {
+            ResponseModel.mapData(it!!)
+        }
     }
 
 

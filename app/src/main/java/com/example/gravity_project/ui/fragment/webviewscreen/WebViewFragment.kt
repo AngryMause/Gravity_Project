@@ -1,23 +1,16 @@
 package com.example.gravity_project.ui.fragment.webviewscreen
 
 import android.annotation.SuppressLint
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.webkit.PermissionRequest
 import android.webkit.WebChromeClient
 import androidx.activity.OnBackPressedCallback
-import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
+import androidx.core.view.isVisible
 import com.example.gravity_project.databinding.FragmentWebViewBinding
 import com.example.gravity_project.localdata.SharedPreferenceService
 import com.example.gravity_project.network.webview.WebViewService
 import com.example.gravity_project.ui.fragment.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDate
 
 @AndroidEntryPoint
 class WebViewFragment : BaseFragment<FragmentWebViewBinding>(FragmentWebViewBinding::inflate) {
@@ -45,16 +38,22 @@ class WebViewFragment : BaseFragment<FragmentWebViewBinding>(FragmentWebViewBind
     private fun initWebView() {
         binding.myWebView.settings.javaScriptEnabled = true
         binding.myWebView.webViewClient = WebViewService(SharedPreferenceService(requireContext()))
-//        val url = sharedPreferenceService.readFromSharedUrl("https://www.reddit.com/")
-        val url = arguments?.getString("key")
-        Log.d("WebView", url.toString())
+        val url = sharedPreferenceService.readFromSharedUrl("https://www.reddit.com/")
         binding.myWebView.webChromeClient = object : WebChromeClient() {
-            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-            override fun onPermissionRequest(request: PermissionRequest?) {
-                request?.grant(request.resources!!)
+            override fun onShowCustomView(view: View?, callback: CustomViewCallback?) {
+                super.onShowCustomView(view, callback)
+                binding.myWebView.isVisible = false
+                binding.fullScreensVideo.isVisible = true
+                binding.fullScreensVideo.addView(view)
+            }
+
+            override fun onHideCustomView() {
+                super.onHideCustomView()
+                binding.myWebView.isVisible = true
+                binding.fullScreensVideo.isVisible = false
             }
         }
-        binding.myWebView.loadUrl(url.toString())
+        binding.myWebView.loadUrl(url)
         binding.myWebView
         govBack()
     }

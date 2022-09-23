@@ -35,19 +35,16 @@ class LoadingFragment : BaseFragment<FragmentLoadingBinding>(FragmentLoadingBind
     private fun checkIsFirstSignIn() {
         val chek = sharedPreferenceService.readFromSharedIsSign(false)
         if (!chek) {
-            sharedPreferenceService.writeToShareIsSignIn(false)
             showWebViewFragmentWithHomeUrl()
-
         } else {
             showWebViewFragmentWithLinkUrl()
-//            sharedPreferenceService.writeToShareIsSignIn(false)
         }
     }
 
 
     private fun showWebViewFragmentWithHomeUrl() {
         viewLifecycleOwner.lifecycleScope.launch {
-            delay(5000)
+            delay(1000)
             loadingScreenViewModel.response.observe(viewLifecycleOwner) {
                 Log.d("Response", it.link)
                 replaceFragment(WebViewFragment.newInstance(it.home))
