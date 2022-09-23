@@ -49,7 +49,6 @@ class WebViewFragment : BaseFragment<FragmentWebViewBinding>(FragmentWebViewBind
                 binding.fullScreensVideo.isVisible = true
                 binding.fullScreensVideo.addView(view)
             }
-
             override fun onHideCustomView() {
                 super.onHideCustomView()
                 binding.myWebView.isVisible = true
@@ -66,6 +65,7 @@ class WebViewFragment : BaseFragment<FragmentWebViewBinding>(FragmentWebViewBind
                         binding.myWebView.goBack()
                     } else {
                         isEnabled = false
+                        activity?.finish()
                     }
                 }
             })
