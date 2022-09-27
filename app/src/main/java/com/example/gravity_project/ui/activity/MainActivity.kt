@@ -1,7 +1,9 @@
 package com.example.gravity_project.ui.activity
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.view.WindowInsets
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -22,14 +24,22 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.R)
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) {
-            window.decorView.windowInsetsController?.hide(WindowInsets.Type.navigationBars())
-            window.decorView.windowInsetsController?.hide(WindowInsets.Type.statusBars())
+            hideSystemUi()
         }
     }
 
+
+    @Suppress("DEPRECATION")
+    private fun hideSystemUi() {
+        val uiOptions = window.decorView.visibility
+        var newUiOptions = uiOptions
+        newUiOptions = newUiOptions or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+        newUiOptions = newUiOptions or View.SYSTEM_UI_FLAG_FULLSCREEN
+        newUiOptions = newUiOptions or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        window.decorView.systemUiVisibility = newUiOptions
+    }
 
 }

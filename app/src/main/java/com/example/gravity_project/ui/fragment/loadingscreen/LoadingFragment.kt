@@ -6,7 +6,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.lifecycleScope
-import com.example.gravity_project.R
 import com.example.gravity_project.databinding.FragmentLoadingBinding
 import com.example.gravity_project.ui.fragment.BaseFragment
 import com.example.gravity_project.ui.fragment.webviewscreen.WebViewFragment
@@ -25,15 +24,13 @@ class LoadingFragment : BaseFragment<FragmentLoadingBinding>(FragmentLoadingBind
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewLifecycleOwner.lifecycleScope.launch() {
-            loadingScreenViewModel.response.asFlow().collect {
-                if (it.isNotEmpty()) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            loadingScreenViewModel.response.asFlow().collect { url ->
+                if (url.isNotEmpty()) {
                     binding.myProgressBar.isVisible = false
-                    binding.loading.setText(R.string.success)
-                    replaceFragment(WebViewFragment.newInstance(it))
+                    binding.loading.isVisible = false
+                    replaceFragment(WebViewFragment.newInstance(url))
                 } else binding.myProgressBar.isVisible = true
-
-
             }
         }
     }
