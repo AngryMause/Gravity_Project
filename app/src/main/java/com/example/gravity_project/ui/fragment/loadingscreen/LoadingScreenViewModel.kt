@@ -5,11 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gravity_project.localdata.SharedPreferenceService
-import com.example.gravity_project.model.ResponseModel
 import com.example.gravity_project.network.retrofit.ApiRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,47 +22,34 @@ class LoadingScreenViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.Main) {
-            delay(1000)
+            writeApiModelToShared()
             checkIsFirstSignIn()
-            delay(1000)
-            writeModelToShared()
         }
     }
 
-    private suspend fun getResponse(): ResponseModel {
-        val data = apiRepository.getResponse().body()
-        return data.let {
-            ResponseModel.mapData(it!!)
-        }
-    }
-
-
-    private suspend fun checkIsFirstSignIn() {
+    private fun checkIsFirstSignIn() {
         val isFirstSignIn = sharedPreferenceService.readFromSharedIsSign()
         if (isFirstSignIn) {
             _response.value = showWebViewFragmentWithHomeUrl()
         } else {
             sharedPreferenceService.writeToShareIsSignIn(true)
-            delay(500)
             _response.value = showWebViewFragmentWithLinkUrl()
         }
     }
 
-
-    private suspend fun showWebViewFragmentWithHomeUrl(): String {
-        delay(5000)
+    private fun showWebViewFragmentWithHomeUrl(): String {
         val model = sharedPreferenceService.readResponse()
         return model.home
     }
 
-    private suspend fun showWebViewFragmentWithLinkUrl(): String {
-        delay(5000)
-        return getResponse().link
+    private fun showWebViewFragmentWithLinkUrl(): String {
+        val model = sharedPreferenceService.readResponse()
+        return model.link
     }
 
-    private suspend fun writeModelToShared() {
-        sharedPreferenceService.writeResponse(ResponseModel.mapData(apiRepository.getResponse()
-            .body()!!))
+    private suspend fun writeApiModelToShared() {
+        sharedPreferenceService.writeResponse(apiRepository.getResponse()
+            .body()!!)
     }
 
 }

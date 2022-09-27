@@ -11,7 +11,6 @@ import com.example.gravity_project.databinding.FragmentLoadingBinding
 import com.example.gravity_project.ui.fragment.BaseFragment
 import com.example.gravity_project.ui.fragment.webviewscreen.WebViewFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -26,6 +25,7 @@ class LoadingFragment : BaseFragment<FragmentLoadingBinding>(FragmentLoadingBind
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         viewLifecycleOwner.lifecycleScope.launch {
             loadingScreenViewModel.response.asFlow().collect {
                 if (it.isEmpty()) {
@@ -33,7 +33,6 @@ class LoadingFragment : BaseFragment<FragmentLoadingBinding>(FragmentLoadingBind
                 } else {
                     binding.myProgressBar.isVisible = false
                     binding.loading.setText(R.string.success)
-                    delay(1500)
                     replaceFragment(WebViewFragment.newInstance(it))
                 }
             }
