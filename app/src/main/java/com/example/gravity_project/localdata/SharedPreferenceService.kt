@@ -1,13 +1,13 @@
 package com.example.gravity_project.localdata
 
 import android.content.SharedPreferences
-import com.example.gravity_project.network.retrofit.ApiModel
+import com.example.gravity_project.model.ApiResponseModel
 import com.google.gson.Gson
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private const val RESPONSE = "model"
-private const val IS_FIRST_SIGN_IN = "isFirst"
+private const val RESPONSE = "api_response"
+private const val IS_FIRST_SIGN_IN = "is_first_sig_in"
 
 @Singleton
 class SharedPreferenceService @Inject constructor(private val sharedPreferences: SharedPreferences) {
@@ -21,7 +21,7 @@ class SharedPreferenceService @Inject constructor(private val sharedPreferences:
         editor.apply()
     }
 
-    fun writeResponse(value: ApiModel) {
+    fun writeResponse(value: ApiResponseModel) {
         val str = gso.toJsonTree(value)
         editor = myShared.edit()
         editor.putString(RESPONSE, str.toString())
@@ -33,10 +33,10 @@ class SharedPreferenceService @Inject constructor(private val sharedPreferences:
         return myShared.getBoolean(IS_FIRST_SIGN_IN, false)
     }
 
-    fun readResponse(): ApiModel {
+    fun readResponse(): ApiResponseModel {
         myShared = sharedPreferences
         val json = myShared.getString(RESPONSE, "empty")
-        val data = gso.fromJson(json, ApiModel::class.java)
-        return ApiModel(data.home, data.link)
+        val data = gso.fromJson(json, ApiResponseModel::class.java)
+        return ApiResponseModel(link = data.link, home = data.home)
     }
 }

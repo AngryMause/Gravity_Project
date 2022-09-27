@@ -25,19 +25,17 @@ class LoadingFragment : BaseFragment<FragmentLoadingBinding>(FragmentLoadingBind
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch() {
             loadingScreenViewModel.response.asFlow().collect {
-                if (it.isEmpty()) {
-                    binding.myProgressBar.isVisible = true
-                } else {
+                if (it.isNotEmpty()) {
                     binding.myProgressBar.isVisible = false
                     binding.loading.setText(R.string.success)
                     replaceFragment(WebViewFragment.newInstance(it))
-                }
+                } else binding.myProgressBar.isVisible = true
+
+
             }
         }
     }
-
 
 }

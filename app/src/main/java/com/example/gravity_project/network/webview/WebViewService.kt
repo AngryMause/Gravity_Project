@@ -5,7 +5,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 
-class WebViewService() :
+class WebViewService ():
     WebViewClient() {
     @SuppressLint("NewApi")
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
