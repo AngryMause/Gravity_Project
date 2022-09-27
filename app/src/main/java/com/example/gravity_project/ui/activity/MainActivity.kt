@@ -33,15 +33,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    @Suppress("DEPRECATION")
-    private fun hideSystemUi() {
-        val uiOptions = window.decorView.visibility
-        var newUiOptions = uiOptions
-        newUiOptions = newUiOptions or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-        newUiOptions = newUiOptions or View.SYSTEM_UI_FLAG_FULLSCREEN
-        newUiOptions = newUiOptions or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-        window.decorView.systemUiVisibility = newUiOptions
-    }
+
 
 
 }
