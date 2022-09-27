@@ -1,7 +1,10 @@
 package com.example.gravity_project.ui.activity
 
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.WindowInsets
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.gravity_project.R
 import com.example.gravity_project.ui.fragment.loadingscreen.LoadingFragment
@@ -20,10 +23,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) {
-            hideSystemUi()
+            window.decorView.windowInsetsController?.hide(WindowInsets.Type.navigationBars())
+            window.decorView.windowInsetsController?.hide(WindowInsets.Type.statusBars())
         }
     }
 

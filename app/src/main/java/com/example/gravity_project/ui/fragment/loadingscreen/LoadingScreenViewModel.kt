@@ -19,7 +19,6 @@ class LoadingScreenViewModel @Inject constructor(
     private val _response = MutableLiveData<String>()
     val response: LiveData<String> get() = _response
 
-
     init {
         viewModelScope.launch(Dispatchers.Main) {
             writeApiModelToShared()
