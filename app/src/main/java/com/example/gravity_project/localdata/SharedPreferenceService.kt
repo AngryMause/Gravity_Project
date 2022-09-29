@@ -33,7 +33,7 @@ class SharedPreferenceService @Inject constructor(private val sharedPreferences:
         return myShared.getBoolean(IS_FIRST_SIGN_IN, false)
     }
 
-    fun readResponse(): ApiResponseModel {
+    fun readApiResponse(): ApiResponseModel {
         myShared = sharedPreferences
         val json = myShared.getString(RESPONSE, "empty")
         val data = gso.fromJson(json, ApiResponseModel::class.java)

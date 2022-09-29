@@ -24,15 +24,24 @@ class LoadingFragment : BaseFragment<FragmentLoadingBinding>(FragmentLoadingBind
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        sendUrlToWebViewFragment()
+    }
+
+    private fun sendUrlToWebViewFragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             loadingScreenViewModel.response.asFlow().collect { url ->
                 if (url.isNotEmpty()) {
-                    binding.myProgressBar.isVisible = false
-                    binding.loading.isVisible = false
+                    hideUiElement()
                     replaceFragment(WebViewFragment.newInstance(url))
                 } else binding.myProgressBar.isVisible = true
             }
         }
     }
+
+    private fun hideUiElement() {
+        binding.myProgressBar.isVisible = false
+        binding.loading.isVisible = false
+    }
+
 
 }

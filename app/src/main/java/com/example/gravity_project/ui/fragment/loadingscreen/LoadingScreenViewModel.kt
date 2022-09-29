@@ -21,34 +21,36 @@ class LoadingScreenViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.Main) {
-            writeApiModelToShared()
+            writeApiModelResponseToShared()
             checkIsFirstSignIn()
         }
     }
 
     private fun checkIsFirstSignIn() {
         val isFirstSignIn = sharedPreferenceService.readFromSharedIsSign()
-        if (isFirstSignIn) {
-            _response.value = showWebViewFragmentWithHomeUrl()
-        } else {
+        if (!isFirstSignIn) {
             sharedPreferenceService.writeToShareIsSignIn(true)
-            _response.value = showWebViewFragmentWithLinkUrl()
+            _response.value = sendWebViewFragmentWithLinkUrl()
+        } else {
+            _response.value = sendWebViewFragmentWithHomeUrl()
         }
     }
 
-    private fun showWebViewFragmentWithHomeUrl(): String {
-        val model = sharedPreferenceService.readResponse()
+    private fun sendWebViewFragmentWithHomeUrl(): String {
+        val model = sharedPreferenceService.readApiResponse()
         return model.home
     }
 
-    private fun showWebViewFragmentWithLinkUrl(): String {
-        val model = sharedPreferenceService.readResponse()
+    private fun sendWebViewFragmentWithLinkUrl(): String {
+        val model = sharedPreferenceService.readApiResponse()
         return model.link
     }
 
-    private suspend fun writeApiModelToShared() {
-        sharedPreferenceService.writeResponse(apiRepository.getResponse()
-            .body()!!)
-    }
+    private suspend fun writeApiModelResponseToShared() {
+        val isFirstSignIn = sharedPreferenceService.readFromSharedIsSign()
+        if (!isFirstSignIn) {
+            sharedPreferenceService.writeResponse(apiRepository.getResponse().body()!!)
+        }
 
+    }
 }
